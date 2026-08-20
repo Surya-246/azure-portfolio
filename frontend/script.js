@@ -1,36 +1,4 @@
 // ===============================
-// CURRENT YEAR
-// ===============================
-
-const currentYear = document.getElementById("currentYear");
-
-if (currentYear) {
-    currentYear.textContent = new Date().getFullYear();
-}
-
-
-// ===============================
-// RESUME BUTTON
-// ===============================
-
-const resumeButton = document.getElementById("resumeButton");
-
-if (resumeButton) {
-
-    resumeButton.addEventListener("click", function (event) {
-
-        event.preventDefault();
-
-        alert(
-            "Resume download will be enabled once the resume PDF is added to the project."
-        );
-
-    });
-
-}
-
-
-// ===============================
 // CONTACT FORM
 // ===============================
 
@@ -39,7 +7,7 @@ const formStatus = document.getElementById("formStatus");
 
 if (contactForm) {
 
-    contactForm.addEventListener("submit", function (event) {
+    contactForm.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
@@ -48,16 +16,46 @@ if (contactForm) {
         const message = document.getElementById("message").value.trim();
 
         if (!name || !email || !message) {
-
             formStatus.textContent = "Please fill in all fields.";
-
             return;
         }
 
-        formStatus.textContent =
-            "Message received! Backend integration will be added soon.";
+        formStatus.textContent = "Sending...";
 
-        contactForm.reset();
+        try {
+
+            const response = await fetch(
+                "http://localhost:3000/api/contact",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        message: message
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                formStatus.textContent = data.message;
+                contactForm.reset();
+            } else {
+                formStatus.textContent =
+                    "Something went wrong. Please try again.";
+            }
+
+        } catch (error) {
+
+            console.error("Contact form error:", error);
+
+            formStatus.textContent =
+                "Unable to connect to the backend.";
+        }
 
     });
 
