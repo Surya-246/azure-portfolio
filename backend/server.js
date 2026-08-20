@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
@@ -6,7 +7,7 @@ const PORT = 3000;
 
 // Allow Express to understand JSON data
 app.use(express.json());
-
+app.use(cors());
 
 // ===============================
 // TEST ROUTE
