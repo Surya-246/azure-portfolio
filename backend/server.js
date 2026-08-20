@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -8,15 +9,14 @@ const PORT = 3000;
 // Allow Express to understand JSON data
 app.use(express.json());
 app.use(cors());
-
+app.use(express.static(path.join(__dirname, "../frontend")));
 // ===============================
 // TEST ROUTE
 // ===============================
 
 app.get("/", (req, res) => {
-    res.json({
-        message: "Surya's Portfolio Backend is running!"
-    });
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+    
 });
 
 
