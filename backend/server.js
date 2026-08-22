@@ -4,28 +4,30 @@ const path = require("path");
 
 const app = express();
 
-const PORT = 3000;
+// Azure provides the PORT through an environment variable.
+// Locally, it will use port 3000.
+const PORT = process.env.PORT || 3000;
 
-// Allow Express to understand JSON data
+// Middleware
 app.use(express.json());
 app.use(cors());
+
+// Serve frontend files
 app.use(express.static(path.join(__dirname, "../frontend")));
+
 // ===============================
-// TEST ROUTE
+// HOME ROUTE
 // ===============================
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
-    
 });
-
 
 // ===============================
 // PROJECTS API
 // ===============================
 
 app.get("/api/projects", (req, res) => {
-
     const projects = [
         {
             id: 1,
@@ -52,13 +54,11 @@ app.get("/api/projects", (req, res) => {
     res.json(projects);
 });
 
-
 // ===============================
 // CONTACT API
 // ===============================
 
 app.post("/api/contact", (req, res) => {
-
     const { name, email, message } = req.body;
 
     console.log("New contact message:");
@@ -72,13 +72,10 @@ app.post("/api/contact", (req, res) => {
     });
 });
 
-
 // ===============================
 // START SERVER
 // ===============================
 
 app.listen(PORT, () => {
-
-    console.log(`Backend server running at http://localhost:${PORT}`);
-
+    console.log(`Backend server running on port ${PORT}`);
 });
